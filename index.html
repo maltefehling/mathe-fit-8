@@ -438,11 +438,15 @@ function genVerknuepfen(){
   if(new Set(v.map(x=>rd(x,2))).size<4) return null;
   return mc(`${o} kostet ${G} €. Zuerst wird der Preis um ${p} % gesenkt. Danach wird der <b>neue</b> Preis um ${q} % erhöht. Wie viel kostet es jetzt?`, ...v.map(eur2));
 }
-function genZins(){
-  const K=pick([500,800,1000,1200,1500,2000,2400]), p=pick([1,1.5,2,2.5,3,4]), t=pick([3,4,6,8,9]);
-  const v=[K*(1+p/100*t/12),K*(1+p/100),K*p/100*t/12,K*(1+p*t/100)];
+function genZins(){ // nur Jahreszinsen
+  const K=pick([400,500,800,1000,1200,1500,2000,2500]), p=pick([1,1.5,2,2.5,3,4]), Z=K*p/100, typ=pick(["kn","z","p","k"]);
+  let q,v,f;
+  if(typ==="kn"){ q=`Du legst ${nf(K)} € für ein Jahr bei einer Bank an. Die Bank zahlt ${nf(p)} % Zinsen pro Jahr. Wie viel Geld hast du nach einem Jahr insgesamt?`; v=[K+Z,Z,K+p,K*(1+p/10)]; f=eur2; }
+  else if(typ==="z"){ q=`Du legst ${nf(K)} € für ein Jahr bei einer Bank an. Die Bank zahlt ${nf(p)} % Zinsen pro Jahr. Wie viel Zinsen bekommst du?`; v=[Z,K+Z,Z*10,Z/10]; f=eur2; }
+  else if(typ==="p"){ q=`Du hast ${nf(K)} € für ein Jahr angelegt und dafür ${eur2(Z)} Zinsen bekommen. Welchen Zinssatz zahlt die Bank?`; v=[p,p*10,p/10,Z]; f=pct; }
+  else { q=`Bei einem Zinssatz von ${nf(p)} % hast du nach einem Jahr ${eur2(Z)} Zinsen bekommen. Wie viel Geld hattest du angelegt?`; v=[K,K*10,K/10,Z*p]; f=eur2; }
   if(new Set(v.map(x=>rd(x,2))).size<4) return null;
-  return mc(`Du legst ${nf(K)} € für ${t} Monate bei einer Bank an. Die Bank zahlt ${nf(p)} % Zinsen <b>pro Jahr</b>. Wie viel Geld bekommst du nach ${t} Monaten insgesamt zurück?`, ...v.map(eur2));
+  return mc(q, ...v.map(f));
 }
 
 /* ============ Daten und Boxplot ============ */
@@ -537,10 +541,65 @@ const BEREICHE=[
 BEREICHE.forEach(b=>b.items.forEach((it,i)=>it.id=b.id+(i+1)));
 
 /* ============ Zustand (nur lokal im Browser) ============ */
-const KEY="mathefit8-v1";
-let ST={};
-try{ ST=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ ST={}; }
-const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(ST)); }catch(e){} };
+const KEY="mathefit8-v2";
+let DB={cur:null,p:{}};
+try{ DB=JSON.parse(localStorage.getItem(KEY)||"null")||DB; }catch(e){}
+if(!DB.p) DB={cur:null,p:{}};
+let ST=DB.cur&&DB.p[DB.cur]?DB.p[DB.cur]:{};
+if(!DB.p[DB.cur]) DB.cur=null;
+const save=()=>{ if(DB.cur) DB.p[DB.cur]=ST; try{ localStorage.setItem(KEY,JSON.stringify(DB)); }catch(e){} };
+const findProfile=n=>Object.keys(DB.p).find(k=>k.toLowerCase()===n.toLowerCase());
+function login(name,state){ const k=findProfile(name)||name; DB.cur=k; ST=state||DB.p[k]||{}; save(); }
+function logout(){ save(); DB.cur=null; ST={}; save(); }
+// Speichercode: 2 Bit je Teilgebiet, Crockford-Base32, 14 Zeichen + 1 Prüfzeichen
+const ALPH="0123456789ABCDEFGHJKMNPQRSTVWXYZ", CODES=[null,"ok1","ok2","fail"];
+const allItems=()=>BEREICHE.flatMap(b=>b.items);
+function encodeCode(){
+  let v=0n; for(const it of allItems()) v=v*4n+BigInt(Math.max(0,CODES.indexOf(ST[it.id]||null)));
+  let d=[]; for(let i=0;i<14;i++){ d.unshift(Number(v%32n)); v/=32n; }
+  d.push(d.reduce((a,x,i)=>a+x*(i+1),0)%32);
+  const s=d.map(x=>ALPH[x]).join(""); return s.slice(0,5)+"-"+s.slice(5,10)+"-"+s.slice(10);
+}
+function decodeCode(str){
+  const s=str.toUpperCase().replace(/O/g,"0").replace(/[IL]/g,"1").replace(/[^0-9A-Z]/g,"");
+  if(s.length!==15) return null;
+  const d=[...s].map(c=>ALPH.indexOf(c)); if(d.some(x=>x<0)) return null;
+  if(d.slice(0,14).reduce((a,x,i)=>a+x*(i+1),0)%32!==d[14]) return null;
+  let v=0n; for(const x of d.slice(0,14)) v=v*32n+BigInt(x);
+  const items=allItems(), st={};
+  for(let i=items.length-1;i>=0;i--){ const c=Number(v%4n); v/=4n; if(c) st[items[i].id]=CODES[c]; }
+  return v===0n?st:null;
+}
+const esc=t=>t.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fantasyName(){ return pick(["Blauer","Flinker","Schlauer","Mutiger","Stiller","Wilder","Goldener","Lustiger","Roter","Schneller"])+" "+pick(["Panda","Fuchs","Luchs","Delfin","Adler","Igel","Otter","Drache","Pinguin","Biber"])+" "+rnd(10,99); }
+function codeBox(){ return `<div class="box merk"><b>💾 Dein Speichercode:</b> <span style="font-family:ui-monospace,Menlo,monospace;font-size:1.15rem;letter-spacing:.06em;white-space:nowrap">${encodeCode()}</span>
+  <div class="small">Schreib ihn mit deinem Fantasienamen in dein Heft. Damit kannst du an jedem anderen Gerät weitermachen. Der Code ändert sich, wenn du weiterarbeitest – notiere am Ende immer den neuesten.</div></div>`; }
+
+function loginScreen(after){
+  app.innerHTML=`<h1>Mathe-Fit 8</h1><p class="muted">Grundlagen-Check Mathematik</p>
+  <div class="card"><h2>Wie heißt du hier?</h2>
+  <div class="box hilfe"><b>Bitte nicht deinen echten Namen!</b> Denk dir einen Fantasienamen aus und schreib ihn in dein Heft. Wenn du ihn beim nächsten Mal auf diesem Gerät wieder eingibst, geht es an deiner Stelle weiter.</div>
+  <div class="row"><input id="nm" maxlength="24" autocomplete="off" placeholder="z. B. ${fantasyName()}" style="font:inherit;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--text);flex:1;min-width:200px">
+  <button class="btn ghost" id="sug">Vorschlag</button></div>
+  <p class="small muted" id="hint" style="min-height:1.4em"></p>
+  <button class="btn" id="go">Los geht's</button></div>
+  <div class="card"><h2>Anderes Gerät? Speichercode eingeben</h2>
+  <p class="small">Wenn du schon an einem anderen Gerät gearbeitet hast, gib deinen Fantasienamen oben ein und hier den Speichercode aus deinem Heft.</p>
+  <div class="row"><input id="cd" maxlength="20" autocomplete="off" placeholder="XXXXX-XXXXX-XXXXX" style="font:inherit;font-family:ui-monospace,Menlo,monospace;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--text);flex:1;min-width:200px;text-transform:uppercase">
+  <button class="btn" id="go2">Stand laden</button></div><p class="small" id="err" style="color:var(--bad);min-height:1.4em"></p></div>
+  ${Object.keys(DB.p).length?`<p class="small muted">Auf diesem Gerät gibt es ${Object.keys(DB.p).length} gespeicherte Profile.</p>`:""}`;
+  const nm=document.getElementById("nm"), hint=document.getElementById("hint");
+  const name=()=>nm.value.trim().replace(/\s+/g," ");
+  nm.oninput=()=>{ const n=name(); hint.textContent=n&&findProfile(n)?"Willkommen zurück! Dein gespeicherter Stand wird geladen.":""; };
+  document.getElementById("sug").onclick=()=>{ nm.value=fantasyName(); nm.oninput(); };
+  document.getElementById("go").onclick=()=>{ const n=name(); if(n.length<3){ hint.textContent="Der Name muss mindestens 3 Zeichen haben."; nm.focus(); return; } login(n); after(); };
+  document.getElementById("go2").onclick=()=>{ const n=name(), st=decodeCode(document.getElementById("cd").value), err=document.getElementById("err");
+    if(n.length<3){ err.textContent="Gib oben zuerst deinen Fantasienamen ein."; return; }
+    if(!st){ err.textContent="Dieser Code ist ungültig. Prüfe ihn noch einmal (Tippfehler?)."; return; }
+    login(n,st); after(); };
+  nm.onkeydown=e=>{ if(e.key==="Enter") document.getElementById("go").click(); };
+  window.scrollTo(0,0);
+}
 const stat=id=>ST[id]||null;
 const MARK={ok1:["✓","richtig"],ok2:["✓","richtig nach Video"],fail:["!","noch üben"]};
 const markHtml=s=>`<span class="mark ${s||""}" aria-label="${s?MARK[s][1]:"offen"}">${s?MARK[s][0]:""}</span>`;
@@ -568,7 +627,7 @@ function home(){
   cur=null; history.replaceState(null,"",location.pathname);
   const all=BEREICHE.flatMap(b=>b.items), done=all.filter(it=>stat(it.id)).length, ok=all.filter(it=>/ok/.test(stat(it.id)||"")).length;
   app.innerHTML=`
-  <h1>Mathe-Fit 8</h1>
+  <div class="topbar"><h1>Mathe-Fit 8</h1><span class="small">👤 <b>${esc(DB.cur)}</b> · <button class="linkbtn" id="logout">Abmelden</button></span></div>
   <p class="muted">Grundlagen-Check: Wie fit bist du in den Themen aus den letzten Schuljahren?</p>
   <div class="box auftrag"><b>So geht's</b>
     <ol style="margin:.4em 0 0 1.1em;padding:0">
@@ -583,13 +642,15 @@ function home(){
     <div class="bar"><span class="g" style="width:${c.ok1/c.n*100}%"></span><span class="y" style="width:${c.ok2/c.n*100}%"></span><span class="r" style="width:${c.fail/c.n*100}%"></span></div>
     <span class="row" style="gap:4px">${b.items.map(it=>markHtml(stat(it.id))).join("")}</span></button>`;}).join("")}</div>
   ${legend}
+  ${codeBox()}
   <footer>
-    <p>Dein Fortschritt wird nur in diesem Browser auf diesem Gerät gespeichert. Es werden keine Daten an einen Server geschickt. <button class="linkbtn" id="reset">Fortschritt löschen</button></p>
+    <p>Dein Fortschritt wird nur in diesem Browser auf diesem Gerät gespeichert. Es werden keine Daten an einen Server geschickt. Wenn du am Ende der Stunde auf „Abmelden“ tippst, kann die nächste Person ihr eigenes Profil anlegen. <button class="linkbtn" id="reset">Meinen Fortschritt löschen</button></p>
     <p>Die Lernvideos und Übungen sind Links zu anderen Webseiten (z.&nbsp;B. YouTube, LearningApps, GeoGebra). Sie öffnen sich in einem neuen Tab, dort gelten die Datenschutzbestimmungen der jeweiligen Anbieter.</p>
     <p><button class="linkbtn" id="info">Quellen und Hinweise</button></p>
   </footer>`;
   app.querySelectorAll("[data-b]").forEach(el=>el.onclick=()=>openBereich(el.dataset.b));
   document.getElementById("reset").onclick=()=>{ if(confirm("Willst du deinen gesamten Fortschritt auf diesem Gerät löschen?")){ ST={}; save(); home(); } };
+  document.getElementById("logout").onclick=()=>{ logout(); loginScreen(home); };
   document.getElementById("info").onclick=info;
   window.scrollTo(0,0);
 }
@@ -600,6 +661,7 @@ function info(){
   <p>Die Gliederung in Bereiche und Teilgebiete sowie die Auswahl der Lernvideos und Übungen orientieren sich an den Checklisten „Bin ich fit?!“ der Fachredaktion Mathematik des Landesbildungsservers Baden-Württemberg (Autor: Fabrice Takin).</p>
   <p>Alle Aufgaben in dieser App wurden <b>neu formuliert</b> und werden bei jedem Aufruf mit neuen Zahlen erzeugt. Es werden keine Texte, Bilder oder Grafiken aus den Originalblättern verwendet; alle Abbildungen werden direkt im Browser gezeichnet.</p>
   <p>Die Lernvideos stammen überwiegend von <a href="https://www.180grad-flip.de" target="_blank" rel="noopener">180grad-flip.de</a> (Sebastian Stoll) sowie von „Mathe by Daniel Jung“ und „Matheretter“. Sie werden nur verlinkt, nicht eingebettet oder kopiert. Die Übungen sind Links auf LearningApps.org, GeoGebra, ZUM, LearningSnacks und schlauerlernen.de. Für die Inhalte dieser Seiten sind die jeweiligen Anbieter verantwortlich.</p>
+  <p>Der Fortschritt wird unter einem selbst gewählten Fantasienamen nur im Browser dieses Geräts gespeichert. Der Speichercode enthält ausschließlich den Bearbeitungsstand (keinen Namen) und wird nirgendwohin übertragen.</p>
   <p>Diese App ist ein kostenloses, nicht-kommerzielles Unterrichtsangebot. Sie verwendet keine Cookies, kein Tracking und lädt keine externen Schriften oder Skripte.</p>
   </div>`;
   document.getElementById("back").onclick=home; window.scrollTo(0,0);
@@ -620,7 +682,7 @@ function nextItem(){
 
 function header(){
   const b=cur.b;
-  return `<div class="topbar"><button class="linkbtn" id="back">← Alle Bereiche</button><span class="small muted">${counts(b).done} von ${b.items.length} bearbeitet · ${counts(b).ok1+counts(b).ok2} richtig</span></div>
+  return `<div class="topbar"><button class="linkbtn" id="back">← Alle Bereiche</button><span class="small muted">👤 ${esc(DB.cur)} · ${counts(b).done} von ${b.items.length} bearbeitet · ${counts(b).ok1+counts(b).ok2} richtig · <button class="linkbtn" onclick="this.closest('main').querySelector('#cbx').innerHTML=codeBox()">Speichercode</button></span></div><div id="cbx"></div>
   <h2 style="margin-top:6px">${b.titel}</h2>
   <div class="chips">${b.items.map((it,i)=>`<button class="chip ${i===cur.i?"cur":""}" data-i="${i}" title="${it.t}">${markHtml(stat(it.id))}${i+1}</button>`).join("")}</div>${legend}`;
 }
@@ -712,13 +774,14 @@ function summary(b){
   <table class="sum">${b.items.map((it,i)=>{const s=stat(it.id);return `<tr><td>${markHtml(s)}</td><td><b>${it.t}</b><br><span class="small muted">${s?MARK[s][1]:"noch offen"}</span>
     ${s==="fail"?`<div class="small"><a href="${YT(it.v[0][1])}" target="_blank" rel="noopener">Video</a>${it.u?` · <a href="${it.u}" target="_blank" rel="noopener">Übung</a>`:""}</div>`:""}</td>
     <td style="text-align:right"><button class="btn ghost small" data-i="${i}">${s?"Nochmal":"Starten"}</button></td></tr>`;}).join("")}</table>
-  <div class="box lehrer small">Zeige diese Übersicht deiner Lehrkraft. Teilgebiete mit <b>!</b> solltest du noch einmal üben.</div></div>`;
+  ${codeBox()}<div class="box lehrer small">Zeige diese Übersicht deiner Lehrkraft. Teilgebiete mit <b>!</b> solltest du noch einmal üben.</div></div>`;
   document.getElementById("back").onclick=home;
   app.querySelectorAll("[data-i]").forEach(el=>el.onclick=()=>openBereich(b.id,+el.dataset.i));
   window.scrollTo(0,0);
 }
 
-const h0=location.hash.slice(1); if(BEREICHE.some(b=>b.id===h0)) openBereich(h0); else home();
+const h0=location.hash.slice(1), start=()=>{ if(BEREICHE.some(b=>b.id===h0)) openBereich(h0); else home(); };
+if(DB.cur) start(); else loginScreen(start);
 </script>
 </body>
 </html>

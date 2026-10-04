@@ -8,6 +8,8 @@ Web-App für Klasse 8 (Realschule BW): Schülerinnen und Schüler prüfen ihr Vo
 - Bei einer falschen Antwort: Lernvideo, danach eine ähnliche Kontrollaufgabe mit neuen Zahlen.
 - Übersicht pro Bereich: ✓ gleich richtig, ✓ richtig nach Video, ! noch üben.
 
+- Beim Start wählen die Schüler einen **Fantasienamen**; mehrere Profile pro Gerät sind möglich. Für den Gerätewechsel gibt es einen **Speichercode** (15 Zeichen, mit Prüfzeichen), der den Stand ohne Server überträgt.
+
 Direktlink zu einem Bereich: `#lf`, `#lgs`, `#fl`, `#pz`, `#db`.
 
 ## Quellen und Rechtliches
@@ -20,4 +22,4 @@ werden im Browser gezeichnet.
 Lernvideos (überwiegend 180grad-flip.de) und Übungen (LearningApps, GeoGebra u. a.) werden nur verlinkt, nicht eingebettet.
 
 Die Seite ist eine einzelne HTML-Datei: keine Cookies, kein Tracking, keine externen Schriften oder Skripte.
-Der Fortschritt liegt nur im `localStorage` des Browsers.
+Der Fortschritt liegt nur im `localStorage` des Browsers; es gibt keinen Server und keine Datenübertragung.
