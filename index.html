@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mathe-Fit 8</title>
+<meta name="description" content="Grundlagen-Check Mathematik Klasse 8 (Realschule): Diagnoseaufgaben mit Lernvideos und Kontrollaufgaben.">
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --text:#1d2330; --muted:#5b6475; --line:#d9dde5;
+  --accent:#1f5fae; --accent-text:#fff;
+  --ok:#1e7d3c; --ok-bg:#e3f4e8; --bad:#b3261e; --bad-bg:#fbe5e3;
+  --auftrag:#e6f4ea; --auftrag-line:#9fd1ae;
+  --hilfe:#fdebd3; --hilfe-line:#f0bf80;
+  --merk:#e3f0fb; --merk-line:#9cc4ea;
+  --lehrer:#eeeff2;
+  --grid:#e2e5ea; --axis:#3a4150; --g1:#1f5fae; --g2:#c2410c; --fill:#c9dcf3;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171c; --card:#1d2128; --text:#e6e8ec; --muted:#a3abb9; --line:#343a45;
+    --accent:#6ea8ef; --accent-text:#0d1420;
+    --ok:#6fd08f; --ok-bg:#163222; --bad:#f2958d; --bad-bg:#3a1d1b;
+    --auftrag:#18301f; --auftrag-line:#3c7a4f;
+    --hilfe:#3a2a14; --hilfe-line:#8a6326;
+    --merk:#15283d; --merk-line:#3a6a99;
+    --lehrer:#262a31;
+    --grid:#2c323c; --axis:#c3c9d4; --g1:#6ea8ef; --g2:#f59e5b; --fill:#26405f;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px 16px 48px}
+h1{font-size:1.6rem;margin:.4em 0 .2em}
+h2{font-size:1.25rem;margin:.2em 0 .5em}
+a{color:var(--accent)}
+button{font:inherit;cursor:pointer}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+.box{border-radius:10px;padding:12px 14px;margin:12px 0;border:1px solid}
+.auftrag{background:var(--auftrag);border-color:var(--auftrag-line)}
+.hilfe{background:var(--hilfe);border-color:var(--hilfe-line)}
+.merk{background:var(--merk);border-color:var(--merk-line)}
+.lehrer{background:var(--lehrer);border-color:var(--line)}
+.btn{display:inline-block;border:0;border-radius:10px;padding:11px 18px;background:var(--accent);color:var(--accent-text);font-weight:600;text-decoration:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.linkbtn{background:none;border:0;color:var(--accent);padding:4px 0;text-decoration:underline}
+/* Bereichsauswahl */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.bereich{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;color:var(--text)}
+.bereich:hover{border-color:var(--accent)}
+.bereich b{display:block;font-size:1.08rem;margin-bottom:4px}
+.bar{height:8px;border-radius:4px;background:var(--grid);overflow:hidden;margin:10px 0 6px;display:flex}
+.bar span{display:block;height:100%}
+.bar .g{background:var(--ok)} .bar .y{background:#d9a227} .bar .r{background:var(--bad)}
+/* Übersicht Teilgebiete */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--text);border-radius:999px;padding:4px 11px;font-size:.85rem;display:flex;gap:6px;align-items:center}
+.chip.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.mark{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;font-size:.8rem;font-weight:700;border:1.5px solid var(--line);color:var(--muted)}
+.mark.ok1{background:var(--ok);border-color:var(--ok);color:#fff}
+.mark.ok2{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+.mark.fail{background:var(--bad-bg);border-color:var(--bad);color:var(--bad)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin-top:6px}
+.legend span{display:flex;gap:5px;align-items:center}
+/* Aufgabe */
+.label{font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.q{font-size:1.08rem}
+.q svg{display:block;margin:12px auto 4px;max-width:100%;height:auto}
+.eq{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:1.15rem;margin:6px 0 6px 10px;display:flex;align-items:center;gap:10px}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 2px;line-height:1.15}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 3px}
+.frac>span:last-child{padding:0 3px}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opts.graphs{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.opt{text-align:left;background:var(--card);color:var(--text);border:2px solid var(--line);border-radius:12px;padding:11px 14px;display:flex;gap:12px;align-items:center}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.sel{border-color:var(--accent);background:var(--merk)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.opt .lt{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);font-weight:700;font-size:.9rem}
+.opts.graphs .opt{flex-direction:column;align-items:center}
+.opts.graphs svg{width:100%;height:auto}
+.vals{display:inline-flex;gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.vals span{padding:2px 10px;border-left:1px solid var(--line);min-width:44px;text-align:center}
+.vals span:first-child{border-left:0}
+table.wt{border-collapse:collapse;margin:8px 0}
+table.wt td,table.wt th{border:1px solid var(--line);padding:3px 10px;text-align:center}
+.feedback{font-weight:700;font-size:1.1rem}
+.feedback.ok{color:var(--ok)} .feedback.bad{color:var(--bad)}
+.videos a{display:inline-flex;gap:6px;align-items:center;margin:4px 10px 4px 0}
+.tally{letter-spacing:2px;font-family:Georgia,serif;font-weight:700}
+.t5{position:relative;display:inline-block;margin-right:6px}
+.t5::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;border-top:2px solid currentColor;transform:rotate(-22deg)}
+table.sum{width:100%;border-collapse:collapse}
+table.sum td{padding:8px 6px;border-top:1px solid var(--line);vertical-align:top}
+footer{margin-top:28px;font-size:.85rem;color:var(--muted)}
+@media (max-width:520px){ body{font-size:16px} .card{padding:14px} .opts.graphs{grid-template-columns:1fr 1fr} }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+"use strict";
+/* ================= Hilfsfunktionen ================= */
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const rd=(x,d=2)=>Math.round(x*10**d)/10**d;
+const nz=(a,b)=>{let v;do{v=rnd(a,b)}while(v===0);return v};
+const isHalf=v=>Math.abs(v*2-Math.round(v*2))<1e-9;
+// Zahl deutsch formatieren, echtes Minuszeichen
+const nf=(n,d=2,min=0)=>rd(n,d).toLocaleString("de-DE",{maximumFractionDigits:d,minimumFractionDigits:min}).replace("-","−");
+const eur=n=>Number.isInteger(rd(n,2))?nf(n,0)+"&nbsp;€":nf(n,2,2)+"&nbsp;€";
+const eur2=n=>nf(n,2,2)+"&nbsp;€";
+const pct1=n=>"ca. "+nf(n,1,1)+"&nbsp;%";
+const pct=n=>nf(n,2)+"&nbsp;%";
+const frac=(z,n)=>`<span class="frac"><span>${z}</span><span>${n}</span></span>`;
+const coef=(m,v="x")=>m===1?v:m===-1?"−"+v:nf(m)+v;
+function term(m,b){ // y = mx + b
+  let s="y = ";
+  if(m!==0) s+=coef(m);
+  if(b!==0) s+= m===0 ? nf(b) : (b>0?" + ":" − ")+nf(Math.abs(b));
+  if(m===0&&b===0) s+="0";
+  return s;
+}
+function lin(a,b,c){ // ax + by = c
+  let s="";
+  if(a!==0) s+=coef(a,"x");
+  if(b!==0) s+= s ? (b>0?" + ":" − ")+coef(Math.abs(b),"y") : coef(b,"y");
+  return s+" = "+nf(c);
+}
+const eqs=(...l)=>l.map((e,i)=>`<div class="eq"><span>(${i+1})</span><span>${e}</span></div>`).join("");
+const pm=v=>v<0?" − "+nf(-v):" + "+nf(v);
+function mc(q,ok,...ds){return {q,options:[{html:ok,ok:true},...ds.map(h=>({html:h}))]};}
+
+/* ================= SVG-Bausteine ================= */
+let clipId=0;
+function ks({min=-5,max=5,size=280,lines=[],points=[],curve=null,labels=true,step=1}={}){
+  const pad=18, n=max-min, s=(size-2*pad)/n;
+  const X=x=>pad+(x-min)*s, Y=y=>size-pad-(y-min)*s;
+  const id="c"+(++clipId);
+  let g=`<svg viewBox="0 0 ${size} ${size}" width="${size}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+  g+=`<defs><clipPath id="${id}"><rect x="${X(min)}" y="${Y(max)}" width="${n*s}" height="${n*s}"/></clipPath></defs>`;
+  for(let i=min;i<=max;i++){
+    g+=`<line x1="${X(i)}" y1="${Y(min)}" x2="${X(i)}" y2="${Y(max)}" stroke="var(--grid)"/>`;
+    g+=`<line x1="${X(min)}" y1="${Y(i)}" x2="${X(max)}" y2="${Y(i)}" stroke="var(--grid)"/>`;
+  }
+  g+=`<line x1="${X(min)}" y1="${Y(0)}" x2="${X(max)+8}" y2="${Y(0)}" stroke="var(--axis)" stroke-width="1.4"/>`;
+  g+=`<line x1="${X(0)}" y1="${Y(min)}" x2="${X(0)}" y2="${Y(max)-8}" stroke="var(--axis)" stroke-width="1.4"/>`;
+  g+=`<path d="M${X(max)+8} ${Y(0)} l-6 -3.5 v7z M${X(0)} ${Y(max)-8} l-3.5 6 h7z" fill="var(--axis)"/>`;
+  const fs=Math.max(9,Math.min(12,s*.55));
+  if(labels) for(let i=min;i<=max;i++){ if(i===0||i%step) continue;
+    g+=`<text x="${X(i)}" y="${Y(0)+fs+2}" font-size="${fs}" text-anchor="middle" fill="var(--muted)">${nf(i)}</text>`;
+    g+=`<text x="${X(0)-4}" y="${Y(i)+fs/3}" font-size="${fs}" text-anchor="end" fill="var(--muted)">${nf(i)}</text>`;
+  }
+  g+=`<text x="${X(max)+6}" y="${Y(0)-6}" font-size="12" fill="var(--axis)">x</text><text x="${X(0)+6}" y="${Y(max)-2}" font-size="12" fill="var(--axis)">y</text>`;
+  g+=`<g clip-path="url(#${id})">`;
+  for(const l of lines){ g+=`<line x1="${X(min-1)}" y1="${Y(l.m*(min-1)+l.b)}" x2="${X(max+1)}" y2="${Y(l.m*(max+1)+l.b)}" stroke="${l.c||"var(--g1)"}" stroke-width="2.4"/>`; }
+  if(curve){ let d=""; for(let x=min;x<=max+1e-9;x+=(max-min)/120){ d+=(d?"L":"M")+X(x).toFixed(1)+" "+Y(curve(x)).toFixed(1)+" "; } g+=`<path d="${d}" fill="none" stroke="var(--g1)" stroke-width="2.4"/>`; }
+  g+=`</g>`;
+  for(const p of points){ g+=`<circle cx="${X(p.x)}" cy="${Y(p.y)}" r="4.5" fill="var(--g2)"/><text x="${X(p.x)+6}" y="${Y(p.y)-7}" font-size="14" font-weight="700" fill="var(--g2)">${p.l}</text>`; }
+  return g+"</svg>";
+}
+function boxplotSvg(k,amin,amax){
+  const W=360,H=110,pad=20,s=(W-2*pad)/(amax-amin), X=v=>pad+(v-amin)*s, y0=20, h=34, ym=y0+h/2, ay=82;
+  let g=`<svg viewBox="0 0 ${W} ${H}" width="${W}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+  g+=`<line x1="${X(k[0])}" y1="${ym}" x2="${X(k[1])}" y2="${ym}" stroke="var(--g1)" stroke-width="2"/>`;
+  g+=`<line x1="${X(k[3])}" y1="${ym}" x2="${X(k[4])}" y2="${ym}" stroke="var(--g1)" stroke-width="2"/>`;
+  g+=`<line x1="${X(k[0])}" y1="${y0+8}" x2="${X(k[0])}" y2="${y0+h-8}" stroke="var(--g1)" stroke-width="2"/>`;
+  g+=`<line x1="${X(k[4])}" y1="${y0+8}" x2="${X(k[4])}" y2="${y0+h-8}" stroke="var(--g1)" stroke-width="2"/>`;
+  g+=`<rect x="${X(k[1])}" y="${y0}" width="${X(k[3])-X(k[1])}" height="${h}" fill="var(--fill)" stroke="var(--g1)" stroke-width="2"/>`;
+  g+=`<line x1="${X(k[2])}" y1="${y0}" x2="${X(k[2])}" y2="${y0+h}" stroke="var(--g1)" stroke-width="2.5"/>`;
+  g+=`<line x1="${X(amin)}" y1="${ay}" x2="${X(amax)}" y2="${ay}" stroke="var(--axis)" stroke-width="1.4"/>`;
+  for(let v=amin;v<=amax;v++){ g+=`<line x1="${X(v)}" y1="${ay-4}" x2="${X(v)}" y2="${ay+4}" stroke="var(--axis)"/>`; if(v%2===0) g+=`<text x="${X(v)}" y="${ay+18}" font-size="12" text-anchor="middle" fill="var(--muted)">${v}</text>`; }
+  for(const v of k){ g+=`<line x1="${X(v)}" y1="${y0+h+2}" x2="${X(v)}" y2="${ay-4}" stroke="var(--grid)" stroke-dasharray="2 3"/>`; }
+  return g+"</svg>";
+}
+function polySvg(pts,labels,W=320,H=190){ // pts in Längeneinheiten, y nach oben
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+  const minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
+  const pad=34,s=Math.min((W-2*pad)/(maxx-minx),(H-2*pad)/(maxy-miny));
+  const ox=(W-(maxx-minx)*s)/2, oy=(H-(maxy-miny)*s)/2;
+  const X=x=>ox+(x-minx)*s, Y=y=>H-oy-(y-miny)*s;
+  let g=`<svg viewBox="0 0 ${W} ${H}" width="${W}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+  g+=`<polygon points="${pts.map(p=>X(p[0])+","+Y(p[1])).join(" ")}" fill="var(--fill)" stroke="var(--g1)" stroke-width="2"/>`;
+  for(const L of labels){
+    if(L.h){ g+=`<line x1="${X(L.h[0][0])}" y1="${Y(L.h[0][1])}" x2="${X(L.h[1][0])}" y2="${Y(L.h[1][1])}" stroke="var(--g2)" stroke-width="2" stroke-dasharray="5 4"/>`;
+      g+=`<text x="${X(L.h[0][0])+(L.left?-6:6)}" y="${(Y(L.h[0][1])+Y(L.h[1][1]))/2+18}" font-size="14" fill="var(--g2)" font-weight="700" text-anchor="${L.left?"end":"start"}">${L.t}</text>`; }
+    else g+=`<text x="${X(L.x)}" y="${Y(L.y)}" font-size="14" text-anchor="middle" fill="var(--text)" font-weight="600">${L.t}</text>`;
+  }
+  for(const P of pts.filter(p=>p[2])) g+=`<text x="${X(P[0])+(P[3]||0)}" y="${Y(P[1])+(P[4]||0)}" font-size="13" fill="var(--muted)" text-anchor="middle">${P[2]}</text>`;
+  return g+"</svg>";
+}
+function barSvg(vals,names){
+  const W=300,H=200,l=40,b=170,top=15,max=Math.ceil(Math.max(...vals)/10)*10, s=(b-top)/max;
+  const cols=["var(--g1)","var(--g2)","#6b8e23"];
+  let g=`<svg viewBox="0 0 ${W} ${H}" width="${W}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+  for(let v=0;v<=max;v+=5){ g+=`<line x1="${l}" y1="${b-v*s}" x2="${W-10}" y2="${b-v*s}" stroke="${v%10?"var(--grid)":"var(--line)"}" ${v%10?'stroke-dasharray="3 3"':""}/>`; if(v%10===0) g+=`<text x="${l-6}" y="${b-v*s+4}" font-size="12" text-anchor="end" fill="var(--muted)">${v} €</text>`; }
+  vals.forEach((v,i)=>{ const x=l+25+i*80; g+=`<rect x="${x}" y="${b-v*s}" width="46" height="${v*s}" fill="${cols[i]}"/><text x="${x+23}" y="${b+18}" font-size="13" text-anchor="middle" fill="var(--text)">${names[i]}</text>`; });
+  g+=`<line x1="${l}" y1="${b}" x2="${W-10}" y2="${b}" stroke="var(--axis)"/>`;
+  return g+"</svg>";
+}
+function tally(n){ let s=""; for(let i=0;i<Math.floor(n/5);i++) s+=`<span class="t5">IIII</span>`; return `<span class="tally">${s}${"I".repeat(n%5)}</span>`; }
+
+/* ============ Lineare Funktionen ============ */
+function genPunkte(){
+  const c=()=>nz(-4,4); let A,B;
+  do{A=[c(),c()];B=[c(),c()];}while(Math.abs(A[0])===Math.abs(A[1])||Math.abs(B[0])===Math.abs(B[1])||(Math.sign(A[0])===Math.sign(B[0])&&Math.sign(A[1])===Math.sign(B[1])));
+  const P=(n,p)=>`${n}(${nf(p[0])}&nbsp;|&nbsp;${nf(p[1])})`, S=(a,b)=>P("A",a)+" und "+P("B",b), sw=p=>[p[1],p[0]];
+  return mc(`Gib die Koordinaten der Punkte A und B an.`+ks({points:[{x:A[0],y:A[1],l:"A"},{x:B[0],y:B[1],l:"B"}]}),
+    S(A,B), S(sw(A),sw(B)), S(A,sw(B)), S([A[0],-A[1]],B));
+}
+function genFunktionsbegriff(){
+  const C=pick([
+    ()=>{const g=pick([5,8,10,12]),p=pick([1.5,2,2.5,3]);return{t:`Ein Handytarif kostet ${nf(g)} € Grundgebühr im Monat. Für jedes Gigabyte Datenvolumen kommen ${nf(p,2,2)} € dazu.`,x:"Anzahl der Gigabyte",y:"Kosten in €",m:p,b:g}},
+    ()=>{const g=pick([3.5,4,4.5,5]),p=pick([2,2.5,3]);return{t:`Ein Taxi verlangt ${nf(g,2,2)} € Grundpreis und ${nf(p,2,2)} € für jeden gefahrenen Kilometer.`,x:"gefahrene Kilometer",y:"Fahrpreis in €",m:p,b:g}},
+    ()=>{const g=pick([20,30,40,50]),p=pick([15,19,25,29]);return{t:`Ein Fitnessstudio verlangt einmalig ${g} € Aufnahmegebühr und dann ${p} € pro Monat.`,x:"Anzahl der Monate",y:"Gesamtkosten in €",m:p,b:g}},
+    ()=>{const h=pick([18,20,24,30]),p=pick([1.5,2,2.5]);return{t:`Eine Kerze ist ${h} cm hoch. Wenn sie brennt, wird sie pro Stunde um ${nf(p)} cm kürzer.`,x:"Brenndauer in Stunden",y:"Höhe der Kerze in cm",m:-p,b:h}},
+    ()=>{const v=pick([300,400,500,600]),p=pick([12,15,20,25]);return{t:`In einem Wassertank sind ${v} Liter Wasser. Pro Minute werden ${p} Liter abgepumpt.`,x:"Zeit in Minuten",y:"Wassermenge in Litern",m:-p,b:v}},
+  ])();
+  return mc(`${C.t}<br>x: ${C.x}, y: ${C.y}<br><b>Welche Funktionsgleichung beschreibt die Situation?</b>`,
+    term(C.m,C.b), term(C.b,C.m), term(-C.m,C.b), C.m>0?term(rd(C.m+C.b),0):term(C.m,-C.b));
+}
+function genWertetabelle(){
+  const m=pick([-3,-2,2,3,0.5,-0.5]), b=nz(-4,4), xs=[-2,-1,0,1,2];
+  const row=f=>`<span class="vals">${xs.map(x=>`<span>${nf(f(x))}</span>`).join("")}</span>`;
+  return mc(`Lege im Heft eine Wertetabelle für die Funktion <b>${term(m,b)}</b> an und zeichne den Graphen.<table class="wt"><tr><th>x</th>${xs.map(x=>`<td>${nf(x)}</td>`).join("")}</tr><tr><th>y</th>${xs.map(()=>"<td>?</td>").join("")}</tr></table><b>Welche y-Werte stehen in deiner Tabelle?</b>`,
+    row(x=>m*x+b), row(x=>m*x-b), row(x=>m*Math.abs(x)+b), row(x=>m*(x+b)));
+}
+function genProportional(){
+  const orig=Math.random()<.5;
+  const m=pick(orig?[0.5,2,-1,-2,1.5,-0.5,3,-3]:[0.5,1,2,-1,-2,1.5,-0.5,3]);
+  const b=orig?0:nz(-3,3);
+  const q=`Handelt es sich bei der abgebildeten Geraden um den Graphen einer <b>proportionalen</b> Funktion? Begründe im Heft und wähle dann.`+ks({lines:[{m,b}]});
+  if(orig) return mc(q,"Ja, denn der Graph ist eine Gerade durch den Ursprung (0&nbsp;|&nbsp;0).",
+    "Nein, denn die Gerade geht nicht durch den Punkt (1&nbsp;|&nbsp;1).","Nein, denn eine proportionale Gerade darf nicht durch den Ursprung gehen.",
+    m<0?"Nein, denn die Gerade fällt.":"Ja, denn jede Gerade ist der Graph einer proportionalen Funktion.");
+  return mc(q,"Nein, denn die Gerade geht nicht durch den Ursprung (0&nbsp;|&nbsp;0).",
+    "Ja, denn der Graph ist eine Gerade.","Ja, denn die Gerade schneidet die y-Achse.",
+    m>0?"Ja, denn je größer x ist, desto größer ist y.":"Nein, denn die Gerade fällt.");
+}
+function genLinear(){
+  const isLine=Math.random()<.5;
+  const q=g=>`Handelt es sich hier um den Graphen einer <b>linearen</b> Funktion? Begründe im Heft und wähle dann.`+g;
+  if(isLine){
+    const m=pick([0.5,-0.5,1,-1,2,-2,1.5]), b=nz(-3,3);
+    return mc(q(ks({lines:[{m,b}]})),"Ja, denn der Graph ist eine Gerade.",
+      "Nein, denn die Gerade geht nicht durch den Ursprung (0&nbsp;|&nbsp;0).",
+      m<0?"Nein, denn der Graph fällt.":"Nein, denn der Graph steigt immer weiter an.",
+      "Nein, denn eine lineare Funktion muss durch den Punkt (1&nbsp;|&nbsp;1) gehen.");
+  }
+  const f=pick([x=>0.5*x*x, x=>-0.4*x*(x-5), x=>0.1*x*x*x, x=>-0.3*x*(x+4)]);
+  return mc(q(ks({curve:f})),"Nein, denn der Graph ist keine Gerade.",
+    "Ja, denn der Graph geht durch den Ursprung (0&nbsp;|&nbsp;0).",
+    "Ja, denn der Graph ist eine durchgehende Linie ohne Lücke.",
+    "Nein, denn der Graph geht durch den Ursprung (0&nbsp;|&nbsp;0).");
+}
+function genZeichnen(){
+  let m,b; do{m=pick([-3,-2,-1,-0.5,0.5,1,2,3]);b=nz(-4,4);}while(Math.abs(m)===Math.abs(b));
+  const G=(mm,bb)=>ks({size:200,lines:[{m:mm,b:bb}],min:-6,max:6,step:2});
+  const t=mc(`Zeichne den Graphen der Funktion <b>${term(m,b)}</b> mit Hilfe von Steigung m und y-Achsenabschnitt b in dein Heft.<br><b>Welcher Graph stimmt mit deiner Zeichnung überein?</b>`,
+    G(m,b),G(-m,b),G(m,-b),G(b,m));
+  t.graphs=true; t.keys=[`${m},${b}`,`${-m},${b}`,`${m},${-b}`,`${b},${m}`]; return t;
+}
+function genErkennen(){
+  const m=pick([-3,-2,-1,-0.5,0.5,1,2,3]), b=nz(-4,4);
+  return mc(`Wie lautet die Funktionsgleichung der abgebildeten Geraden? Bestimme m und b im Heft (Steigungsdreieck!).`+ks({lines:[{m,b}]}),
+    term(m,b), term(-m,b), Math.abs(m)===1?term(-m,-b):term(1/m,b), term(m,-b));
+}
+
+/* ============ Lineare Gleichungssysteme ============ */
+const S2=(x,y)=>`x = ${nf(x)}&nbsp;&nbsp;;&nbsp;&nbsp;y = ${nf(y)}`;
+function lgsMC(q,x0,y0,E){ // E: normierte Gleichungen [a,b] (c wird aus Lösung berechnet)
+  const N=E.map(([a,b])=>[a,b,a*x0+b*y0]);
+  const onEq=([a,b,c])=>shuffle([-x0,x0+1,x0-1,x0+2,x0-2,x0+3]).filter(x=>x!==x0).map(x=>[x,rd((c-a*x)/b,6)]).filter(([,y])=>isHalf(y)&&Math.abs(y)<=25);
+  const l1=onEq(N[0]), l2=onEq(N[1]);
+  const pool=[...(x0!==y0?[[y0,x0]]:[]), l1[0], l2[0], l1[1], l2[1], [x0,y0+1], [x0+1,y0]].filter(Boolean);
+  const seen=new Set([x0+","+y0]), ds=[];
+  for(const p of pool){ const k=p[0]+","+p[1]; if(!seen.has(k)){seen.add(k);ds.push(S2(p[0],p[1]));} if(ds.length===3) break; }
+  return mc(q,S2(x0,y0),...ds);
+}
+function genLgsText(){
+  const T=pick(["tiere","kino","rad"]); let a,b; do{a=rnd(4,25);b=rnd(3,18);}while(a===b);
+  let q,unit;
+  if(T==="tiere"){ const [A,B]=pick([["Hühner","Kaninchen"],["Gänse","Schafe"],["Strauße","Zebras"],["Enten","Ziegen"]]);
+    q=`Auf einem Bauernhof gibt es nur ${A} und ${B}. Lena zählt insgesamt ${a+b} Köpfe und ${2*a+4*b} Beine. Wie viele ${A} und wie viele ${B} sind es?`; unit=[A,B]; }
+  else if(T==="kino"){ const pk=pick([5,6,7]),pe=pick([9,10,11,12]);
+    q=`Eine Gruppe von ${a+b} Personen geht ins Kino und bezahlt zusammen ${a*pk+b*pe} €. Eine Kinderkarte kostet ${pk} €, eine Erwachsenenkarte ${pe} €. Wie viele Kinder und wie viele Erwachsene sind es?`; unit=["Kinder","Erwachsene"]; }
+  else { q=`Ein Verleih hat Fahrräder und Dreiräder, zusammen ${a+b} Stück mit insgesamt ${2*a+3*b} Rädern. Wie viele Fahrräder und wie viele Dreiräder sind es?`; unit=["Fahrräder","Dreiräder"]; }
+  const S=(x,y)=>`${x} ${unit[0]} und ${y} ${unit[1]}`;
+  return mc(q+`<br><span class="muted">Stelle zuerst ein Gleichungssystem mit zwei Variablen auf und löse es.</span>`,
+    S(a,b), a!==b?S(b,a):S(a+1,b-1), S(a+2,b-2), S(a-3,b+3));
+}
+const M=[-3,-2,-1.5,-1,-0.5,0.5,1,1.5,2,3];
+function genGleichsetzen(){
+  for(;;){ const x0=rnd(-4,4),y0=rnd(-4,5),m1=pick(M),m2=pick(M); if(m1===m2) continue;
+    const b1=y0-m1*x0,b2=y0-m2*x0; if(!isHalf(b1)||!isHalf(b2)||Math.abs(b1)>10||Math.abs(b2)>10) continue;
+    return lgsMC(`Löse das Gleichungssystem mit dem <b>Gleichsetzungsverfahren</b>.`+eqs(term(m1,b1),term(m2,b2)),x0,y0,[[-m1,1],[-m2,1]]); }
+}
+function genEinsetzen(){
+  for(;;){ const x0=rnd(-3,4),y0=rnd(-3,5),m1=pick([-3,-2,2,3,4]),b1=y0-m1*x0,a=nz(-4,4),b=nz(-3,3);
+    if(Math.abs(b1)>12||a*1===-b*m1) continue;
+    return lgsMC(`Löse das Gleichungssystem mit dem <b>Einsetzungsverfahren</b>.`+eqs(term(m1,b1),lin(a,b,a*x0+b*y0)),x0,y0,[[-m1,1],[a,b]]); }
+}
+function genAddieren(){
+  for(;;){ const x0=rnd(-3,5),y0=rnd(-3,5),a1=nz(-5,5),b1=nz(-4,4),a2=nz(-5,5),b2=-b1*pick([1,1,2]);
+    if(a1*b2-a2*b1===0) continue;
+    return lgsMC(`Löse das Gleichungssystem mit dem <b>Additionsverfahren</b>.`+eqs(lin(a1,b1,a1*x0+b1*y0),lin(a2,b2,a2*x0+b2*y0)),x0,y0,[[a1,b1],[a2,b2]]); }
+}
+function genPruefGleich(){ // x + k(y + p) = c  ;  ½(x + q) − r(y − s) = c2
+  for(;;){ const x0=rnd(-4,6),y0=rnd(-3,5),k=pick([2,3]),p=rnd(1,4),q=rnd(1,6),r=pick([2,3]),s=rnd(1,3);
+    if((x0+q)%2!==0) continue; const c=x0+k*(y0+p), c2=(x0+q)/2-r*(y0-s);
+    return lgsMC(`Löse das Gleichungssystem. Forme beide Gleichungen zuerst um (Klammern auflösen) und wende dann das <b>Gleichsetzungsverfahren</b> an.`+
+      eqs(`x + ${k}(y + ${p}) = ${nf(c)}`,`${frac(1,2)}(x + ${q}) − ${r}(y − ${s}) = ${nf(c2)}`),x0,y0,[[1,k],[0.5,-r]]); }
+}
+function genPruefEinsetz(){ // (x − p)/q = y + r  ;  (a x − b)/3 − k(y − 1) = c
+  for(;;){ const x0=rnd(-5,9),p=rnd(1,5),q=pick([2,3]),r=rnd(1,3); if((x0-p)%q!==0) continue;
+    const y0=(x0-p)/q-r, a=pick([2,4,5]), b=rnd(1,8); if((a*x0-b)%3!==0||Math.abs(y0)>6) continue;
+    const k=pick([2,3,4,5]), c=(a*x0-b)/3-k*(y0-1);
+    return lgsMC(`Löse das Gleichungssystem. Forme zuerst um und wende dann das <b>Einsetzungsverfahren</b> an.`+
+      eqs(`${frac("x − "+p,q)} = y + ${r}`,`${frac(a+"x − "+b,3)} − ${k}(y − 1) = ${nf(c)}`),x0,y0,[[1/q,-1],[a/3,-k]]); }
+}
+function genPruefAdd(){ // a(y − p) − b(x − q) = c  ;  ⅔y + (r + x)/3 = c2
+  for(;;){ const x0=rnd(-6,6),y0=rnd(-6,5),a=pick([3,4,5]),b=pick([2,3]),p=rnd(1,4),q=rnd(2,8),r=rnd(4,22);
+    if((2*y0+r+x0)%3!==0) continue; const c=a*(y0-p)-b*(x0-q), c2=(2*y0+r+x0)/3;
+    return lgsMC(`Löse das Gleichungssystem. Forme zuerst um und wende dann das <b>Additionsverfahren</b> an.`+
+      eqs(`${a}(y − ${p}) − ${b}(x − ${q}) = ${nf(c)}`,`${frac(2,3)}y + ${frac(r+" + x",3)} = ${nf(c2)}`),x0,y0,[[-b,a],[1/3,2/3]]); }
+}
+
+/* ============ Drei- und Vierecke ============ */
+function genUA(){
+  const s=pick([
+    ["Herr Kaya möchte um seinen rechteckigen Garten einen Zaun bauen. Was muss er berechnen, um zu wissen, wie viel Zaun er kaufen muss?","U","m"],
+    ["Familie Weber will den Boden ihres Wohnzimmers mit neuem Parkett belegen. Was müssen sie berechnen, um zu wissen, wie viel Parkett sie brauchen?","A","m"],
+    ["Mia möchte um ihr Poster eine Lichterkette legen, die genau am Rand entlangläuft. Was muss sie berechnen, um die Länge der Lichterkette zu kennen?","U","cm"],
+    ["Ein Fußballplatz soll neuen Rasen bekommen. Was muss der Platzwart berechnen, um zu wissen, wie viel Rollrasen er bestellen muss?","A","m"],
+    ["Ein Tisch soll eine neue Tischplatte aus Glas bekommen. Was muss berechnet werden, um zu wissen, wie groß die Glasplatte ist?","A","cm"],
+    ["Entlang der Wände eines Zimmers sollen Fußleisten angebracht werden. Was muss berechnet werden, um die Länge der Leisten zu kennen?","U","m"],
+  ]);
+  const U=`Den <b>Umfang</b>, Einheit z.&nbsp;B. ${s[2]}`, U2=`Den <b>Umfang</b>, Einheit z.&nbsp;B. ${s[2]}²`, A=`Den <b>Flächeninhalt</b>, Einheit z.&nbsp;B. ${s[2]}²`, A1=`Den <b>Flächeninhalt</b>, Einheit z.&nbsp;B. ${s[2]}`;
+  return s[1]==="U"?mc(s[0],U,U2,A,A1):mc(s[0],A,A1,U,U2);
+}
+function genWinkel(){
+  const tri=Math.random()<.4;
+  if(tri){ const a=rnd(30,80),b=rnd(30,80); if(a+b>150) return null; const c=180-a-b;
+    return mc(`In einem Dreieck ABC ist α = ${a}° und β = ${b}°. Wie groß ist γ? Schreibe deine Rechnung auf.`,`γ = ${c}°`,`γ = ${360-a-b}°`,`γ = ${c+10}°`,`γ = ${c-10}°`); }
+  const trap=Math.random()<.5; let a,b,c,d;
+  if(trap){ a=rnd(45,85); b=rnd(45,85); c=180-b; d=180-a; }
+  else { a=rnd(60,120); b=rnd(60,120); c=rnd(60,120); d=360-a-b-c; if(d<40||d>160) return null; }
+  const f=trap?"Trapez ABCD (AB ist parallel zu CD)":"Viereck ABCD";
+  return mc(`In einem ${f} ist α = ${a}°, β = ${b}° und γ = ${c}°. Wie groß ist δ? Schreibe deine Rechnung auf.`,
+    `δ = ${d}°`,`δ = ${a+b+c-180}°`,`δ = ${d+10}°`,`δ = ${d-20}°`);
+}
+function genQuadrat(){
+  const a=rnd(5,14),A=a*a, o=pick([["Eine quadratische Fliese",'cm'],["Ein quadratischer Bilderrahmen",'cm'],["Ein quadratisches Beet",'m'],["Eine quadratische Uhr",'cm']]);
+  const u=o[1], cand=[4*a,2*a,A/4,a,A/2];
+  const seen=new Set(),opts=[]; for(const v of cand){const k=rd(v);if(!seen.has(k)){seen.add(k);opts.push(nf(v)+" "+u);}}
+  return mc(`${o[0]} hat einen Flächeninhalt von ${A} ${u}². Wie lang ist der Umfang?`,...opts.slice(0,4));
+}
+function genRechteck(){
+  const a=rnd(4,12),b=rnd(3,9); if(a===b) return null;
+  const S=(U,A)=>`U = ${nf(U)} dm&nbsp;&nbsp;;&nbsp;&nbsp;A = ${nf(A)} dm²`;
+  return mc(`Die rechteckige Rückenlehne eines Stuhls ist ${a} dm breit und ${b} dm hoch. Berechne Umfang und Flächeninhalt der Rückenlehne.`,
+    S(2*(a+b),a*b), S(a+b,a*b), S(a*b,2*(a+b)), S(2*(a+b),2*a*b));
+}
+function genParallelogramm(){
+  const g=rnd(4,8),h=rnd(2,5),o=pick([1,1.5,2]), s=rd(Math.hypot(o,h),1);
+  const svg=polySvg([[0,0,"A",-8,14],[g,0,"B",8,14],[g+o,h,"C",8,-4],[o,h,"D",-8,-4]],[{x:g/2,y:-0.55,t:`g = ${nf(g)} cm`},{x:g+o/2+0.9,y:h/2,t:`${nf(s)} cm`},{h:[[o,0],[o,h]],t:`h = ${nf(h)} cm`}]);
+  const v=[g*h,g*s,g*h/2,2*(g+s)].map(x=>rd(x,2)); if(new Set(v).size<4) return null;
+  return mc(`Berechne den Flächeninhalt des Parallelogramms.`+svg, ...v.map(x=>nf(x)+" cm²"));
+}
+function genDreieck(){
+  const c=rnd(6,10),h=rnd(3,7),p=rnd(1,c-1), a=rd(Math.hypot(p,h),1), b=rd(Math.hypot(c-p,h),1);
+  const svg=polySvg([[0,0,"A",-8,14],[c,0,"B",8,14],[p,h,"C",0,-6]],[{x:c/2,y:-0.6,t:`c = ${nf(c)} cm`},{x:p/2-0.9,y:h/2+0.3,t:`${nf(a)} cm`},{x:(p+c)/2+1,y:h/2+0.3,t:`${nf(b)} cm`},{h:[[p,0],[p,h]],t:`h = ${nf(h)} cm`,left:p>c/2}]);
+  const U=rd(a+b+c,1), S=(u,A)=>`U = ${nf(u)} cm&nbsp;&nbsp;;&nbsp;&nbsp;A = ${nf(A)} cm²`;
+  return mc(`Berechne Umfang und Flächeninhalt des Dreiecks.`+svg, S(U,c*h/2), S(U,c*h), S(U,rd(a*b/2,2)), S(rd(U+h,1),c*h/2));
+}
+function genTrapez(){
+  const a=rnd(7,12),c=rnd(3,a-3),h=rnd(3,6),o=rnd(1,a-c-1), d=rd(Math.hypot(o,h),1), b=rd(Math.hypot(a-c-o,h),1);
+  const svg=polySvg([[0,0,"A",-8,14],[a,0,"B",8,14],[o+c,h,"C",8,-4],[o,h,"D",-8,-4]],[{x:a/2,y:-0.6,t:`a = ${nf(a)} cm`},{x:o+c/2,y:h+0.35,t:`c = ${nf(c)} cm`},{x:o/2-1,y:h/2,t:`${nf(d)} cm`},{x:o+c+(a-c-o)/2+1,y:h/2,t:`${nf(b)} cm`},{h:[[o+0.4,0],[o+0.4,h]],t:`h = ${nf(h)} cm`}]);
+  const v=[(a+c)/2*h,(a+c)*h,a*h,(a+c)/2*d].map(x=>rd(x,2)); if(new Set(v).size<4) return null;
+  return mc(`Berechne den Flächeninhalt des Trapezes (a und c sind parallel).`+svg, ...v.map(x=>nf(x)+" cm²"));
+}
+
+/* ============ Prozent und Zins ============ */
+function genOrdnen(){
+  const F=[[1,2],[1,3],[1,4],[3,4],[2,5],[3,5],[1,5],[2,3],[5,8],[3,8],[7,10],[4,7],[7,13],[5,6],[3,10],[4,9]];
+  const fr=shuffle(F).slice(0,4).map(([z,n])=>({v:z/n,h:frac(z,n)})), p=rnd(6,94);
+  const it=[...fr,{v:p/100,h:p+"&nbsp;%",pc:true}];
+  const sorted=it.slice().sort((x,y)=>x.v-y.v);
+  for(let i=1;i<5;i++) if(sorted[i].v-sorted[i-1].v<0.015) return null;
+  const S=a=>a.map(x=>x.h).join(" &lt; ");
+  const gaps=[0,1,2,3].sort((i,j)=>(sorted[i+1].v-sorted[i].v)-(sorted[j+1].v-sorted[j].v));
+  const swp=i=>{const a=sorted.slice();[a[i],a[i+1]]=[a[i+1],a[i]];return a;};
+  const pi=sorted.findIndex(x=>x.pc), mv=sorted.slice(); const [pp]=mv.splice(pi,1); if(pi===0) mv.push(pp); else mv.unshift(pp);
+  return mc(`Ordne die Zahlen der Größe nach, beginne mit der kleinsten:<div class="eq">${shuffle(it).map(x=>x.h).join(" ;&nbsp; ")}</div>Tipp: Wandle im Heft alle Zahlen in Dezimalzahlen oder Prozent um.`,
+    S(sorted), S(swp(gaps[0])), S(swp(gaps[1])), S(mv));
+}
+function genProzentsatz(){
+  const G=rnd(22,32),P=rnd(3,9), c=pick([["mit dem Bus zur Schule kommen","kommen mit dem Bus"],["eine Brille tragen","tragen eine Brille"],["in einem Sportverein sind","sind im Sportverein"],["in der letzten Arbeit eine 1 hatten","hatten eine 1"]]);
+  const v=[P/G*100,(G-P)/G*100,P/(G-P)*100,P].map(x=>rd(x,1)); if(new Set(v).size<4) return null;
+  return mc(`In einer Klasse mit ${G} Schülerinnen und Schülern ${c[1]} ${P}. Welchem Anteil in Prozent entspricht das?<br><span class="muted">Schreibe im Heft auch auf, was hier Grundwert, Prozentwert und Prozentsatz ist.</span>`, ...v.map(pct1));
+}
+function genEndwert(){
+  const o=pick(["Ein Fahrrad","Eine Jacke","Eine Spielkonsole","Ein Paar Sneaker","Ein Tablet"]), P=pick([80,120,160,240,360,420,480,500]), p=pick([10,15,20,25,30]), down=Math.random()<.65;
+  const v=down?[P*(1-p/100),P*p/100,P*(1+p/100),P-p]:[P*(1+p/100),P*p/100,P*(1-p/100),P+p];
+  return mc(`${o} kostet ${P} €. ${down?`Im Sale wird der Preis um ${p} % <b>reduziert</b>`:`Der Preis wird um ${p} % <b>erhöht</b>`}. Wie lautet der neue Preis?`, ...v.map(eur));
+}
+function genAnfangswert(){
+  const C=pick([
+    ()=>{const G=pick([32,64,128,256]),p=pick([25,40,75,80]);return{t:`Vom Speicher deines Smartphones sind ${p} % belegt. Das sind ${nf(G*p/100)} GB. Wie groß ist der gesamte Speicher?`,G,p,u:" GB"}},
+    ()=>{const G=pick([300,450,500,600,800]),p=pick([20,40,60,75]);return{t:`Die Klasse hat schon ${p} % des Geldes für die Klassenfahrt eingesammelt. Das sind ${nf(G*p/100)} €. Wie viel Geld wird insgesamt gebraucht?`,G,p,u:" €"}},
+    ()=>{const G=pick([4,8,12,16]),p=pick([25,75,80]);return{t:`Ein Download ist zu ${p} % fertig. Bisher wurden ${nf(G*p/100)} GB geladen. Wie groß ist die ganze Datei?`,G,p,u:" GB"}},
+  ])();
+  const W=C.G*C.p/100, v=[C.G,W*C.p/100,W+W*(1-C.p/100),W/(1-C.p/100)].map(x=>rd(x,2)); if(new Set(v).size<4) return null;
+  return mc(C.t,...v.map(x=>nf(x)+C.u));
+}
+function genVeraenderung(){
+  const q=pick([0.25,1,-0.2]), up=q>0, C=pick(["geld","kino","ag"]);
+  const a=C==="ag"?pick([20,40,60]):pick([8,12,16,20]), b=a*(1+q);
+  const t=C==="geld"?`Dein Taschengeld ${up?"steigt":"sinkt"} von ${eur(a)} auf ${eur(b)} pro Woche.`
+    :C==="kino"?`Eine Kinokarte kostete ${eur(a)}. Jetzt kostet sie ${eur(b)}.`
+    :`Die Theater-AG hatte im letzten Schuljahr ${a} Mitglieder. In diesem Schuljahr sind es ${b}.`;
+  const d=Math.abs(b-a), v=[d/a*100,d/b*100,d,b/a*100]; if(new Set(v.map(x=>rd(x,2))).size<4) return null;
+  return mc(`${t}<br><b>Um wie viel Prozent ist der Wert ${up?"gestiegen":"gesunken"}?</b>`, ...v.map(pct));
+}
+function genVerknuepfen(){
+  const G=pick([80,120,200,240,400,500]), p=pick([10,20,25,50]), same=Math.random()<.4, q=same?p:pick([10,20,25,50].filter(x=>x!==p));
+  const o=pick(["Ein Smartphone","Eine Jacke","Ein Paar Kopfhörer","Ein Skateboard"]);
+  const v=same?[G*(1-p/100)*(1+p/100),G,G*(1-p/100)**2,G*(1-p/100)]:[G*(1-p/100)*(1+q/100),G*(1-p/100+q/100),G*(1-p/100)*(1-q/100),G*(1-p/100)];
+  if(new Set(v.map(x=>rd(x,2))).size<4) return null;
+  return mc(`${o} kostet ${G} €. Zuerst wird der Preis um ${p} % gesenkt. Danach wird der <b>neue</b> Preis um ${q} % erhöht. Wie viel kostet es jetzt?`, ...v.map(eur2));
+}
+function genZins(){
+  const K=pick([500,800,1000,1200,1500,2000,2400]), p=pick([1,1.5,2,2.5,3,4]), t=pick([3,4,6,8,9]);
+  const v=[K*(1+p/100*t/12),K*(1+p/100),K*p/100*t/12,K*(1+p*t/100)];
+  if(new Set(v.map(x=>rd(x,2))).size<4) return null;
+  return mc(`Du legst ${nf(K)} € für ${t} Monate bei einer Bank an. Die Bank zahlt ${nf(p)} % Zinsen <b>pro Jahr</b>. Wie viel Geld bekommst du nach ${t} Monaten insgesamt zurück?`, ...v.map(eur2));
+}
+
+/* ============ Daten und Boxplot ============ */
+function genStrichliste(){
+  const k=rnd(3,7),z=rnd(3,7); if(k===z) return null;
+  const seq=(kk,zz)=>shuffle([...Array(kk).fill("Kopf"),...Array(zz).fill("Zahl")]).join(", ");
+  return mc(`Eine Münze wurde mehrmals geworfen. Das Ergebnis wurde in einer Strichliste festgehalten:<table class="wt"><tr><th>Seite</th><th>Strichliste</th></tr><tr><td>Kopf</td><td>${tally(k)}</td></tr><tr><td>Zahl</td><td>${tally(z)}</td></tr></table><b>Welche Wurfreihe passt zu dieser Strichliste?</b>`,
+    seq(k,z), seq(z,k), seq(k+1,z), seq(k,z-1));
+}
+function genDiagramm(){
+  const vals=shuffle([5,10,15,20,25,30,35,40,45]).slice(0,3), n=["8a","8b","8c"];
+  const [i,j]=shuffle([0,1,2]).slice(0,2), hi=vals[i]>vals[j]?i:j, lo=hi===i?j:i, k=3-i-j;
+  const d=vals[hi]-vals[lo];
+  const cand=[d,vals[hi],d+5,d-5,Math.abs(vals[hi]-vals[k])].filter(x=>x>0);
+  const opts=[...new Set(cand)].slice(0,4); if(opts.length<4||opts[0]!==d) return null;
+  return mc(`Das Diagramm zeigt, wie viel Geld in den Klassenkassen ist.`+barSvg(vals,n)+`<b>Wie viel Euro hat die ${n[hi]} mehr in der Klassenkasse als die ${n[lo]}?</b>`, ...opts.map(x=>x+" €"));
+}
+function genMedian(){
+  const L=Array.from({length:6},()=>rnd(2,20)), s=L.slice().sort((a,b)=>a-b);
+  const med=(s[2]+s[3])/2, raw=(L[2]+L[3])/2, sp=s[5]-s[0], mean=rd(L.reduce((a,b)=>a+b)/6,1);
+  const S=(m,r)=>`Zentralwert: ${nf(m)}&nbsp;&nbsp;;&nbsp;&nbsp;Spannweite: ${nf(r)}`;
+  const cand=[[med,sp],[raw,sp],[med,s[5]],[mean,sp],[med,sp+1]].map(x=>S(...x));
+  const opts=[...new Set(cand)].slice(0,4); if(opts.length<4) return null;
+  return mc(`Bei einem Vokabeltest haben sechs Kinder folgende Punktzahlen erreicht:<div class="eq">${L.join("&nbsp;&nbsp;&nbsp;")}</div>Gib den Zentralwert (Median) und die Spannweite an. Schreibe dazu im Heft zuerst die Rangliste auf.`, ...opts);
+}
+function genBoxKennwerte(){
+  const mn=rnd(4,14), qu=mn+rnd(2,4), md=qu+rnd(1,3), qo=md+rnd(1,3), mx=qo+rnd(2,6);
+  const amin=mn-2-(mn%2), amax=mx+2+(mx%2);
+  const S=k=>`Min: ${k[0]} | q<sub>u</sub>: ${k[1]} | Median: ${k[2]} | q<sub>o</sub>: ${k[3]} | Max: ${k[4]}`;
+  const k=[mn,qu,md,qo,mx], m2=md+1<qo?md+1:md-1;
+  return mc(`Lies die Kennwerte des Boxplots ab.`+boxplotSvg(k,amin,amax)+`<span class="muted">Kann man aus dem Boxplot auch das arithmetische Mittel ablesen? Notiere deine Antwort im Heft.</span>`,
+    S(k), S(k.map(x=>x+1)), S([mn,qu,m2,qo,mx]), S([mn,qu-1,md,qo+1,mx]));
+}
+function quart(v){return [v[0],(v[1]+v[2])/2,(v[3]+v[4])/2,(v[5]+v[6])/2,v[7]];}
+function genBoxReihe(){
+  const v=[rnd(1,5)]; for(let i=1;i<8;i++) v.push(v[i-1]+rnd(0,4));
+  const k=quart(v); if(new Set(k).size<5) return null;
+  const variant=(idx)=>{ for(const d of shuffle([2,-2,1,-1,3,-3])){ const w=v.slice(); w[idx]+=d; if(w[idx]<w[idx-1]||w[idx]>w[idx+1]) continue; if(String(quart(w))!==String(k)) return w; } return null; };
+  const ds=[variant(pick([1,2])),variant(pick([3,4])),variant(pick([5,6]))]; if(ds.some(x=>!x)) return null;
+  const S=a=>a.join("&nbsp;&nbsp;·&nbsp;&nbsp;");
+  return mc(`Welche Rangliste gehört zum abgebildeten Boxplot? Bestimme im Heft für jede Liste die Kennwerte.`+boxplotSvg(k.map(x=>x),0,Math.ceil((v[7]+2)/2)*2), S(v), ...ds.map(S));
+}
+
+/* ============ Inhalte: Bereiche, Videos, Übungen ============ */
+const YT=id=>"https://www.youtube.com/watch?v="+id;
+const FLIP="https://www.180grad-flip.de/mathematik-klasse-";
+const BEREICHE=[
+ {id:"lf",titel:"Lineare Funktionen",items:[
+  {t:"Punkte im Koordinatensystem",g:genPunkte,v:[["Lernvideo","osDZGgnrklQ"]],f:FLIP+"8/lineare-funktionen/0-punkte-im-koordinatensystem/",u:"http://www.zum.de/dwu/depothp/hp-math/hpmky02.htm"},
+  {t:"Funktionsbegriff",g:genFunktionsbegriff,v:[["Lernvideo","nFA8l3-0IXg"]],f:FLIP+"8/lineare-funktionen/1-funktionsbegriff/",u:"https://learningapps.org/watch?v=p7zfnnfxj22"},
+  {t:"Zeichnen mit Wertetabellen",g:genWertetabelle,v:[["Lernvideo","EfPX2lmay0c"]],f:FLIP+"8/lineare-funktionen/2-zeichnen-mit-wertetabellen/",u:"https://www.geogebra.org/m/ee7U2NGK"},
+  {t:"Proportionale Funktion",g:genProportional,v:[["Lernvideo","_QOhbiRN_RQ"]],f:FLIP+"8/lineare-funktionen/3-proportionale-funktion/",u:"https://www.geogebra.org/m/dpvdyy55"},
+  {t:"Lineare Funktion",g:genLinear,v:[["Lernvideo","xaRTrxhRBM4"]],f:FLIP+"8/lineare-funktionen/4-lineare-funktion/",u:"https://www.geogebra.org/m/AJgx99Gb"},
+  {t:"Zeichnen mit m und b",g:genZeichnen,v:[["Einführung","CI06_eNjNws"],["Beispiele","g4fFXe9-en0"]],f:FLIP+"8/lineare-funktionen/5-zeichnen-mit-m-und-b-e/",u:"https://www.geogebra.org/m/d2q7UF4n"},
+  {t:"Funktionen im Koordinatensystem erkennen",g:genErkennen,v:[["Einführung","D1ohhkkIUoM"],["Beispiele","2j4V10V5Gnc"]],f:FLIP+"8/lineare-funktionen/6-erkennen-von-funktionen-e/",u:"https://www.geogebra.org/m/gwh4ghhx"},
+ ]},
+ {id:"lgs",titel:"Lineare Gleichungssysteme",items:[
+  {t:"Gleichungssysteme aufstellen",g:genLgsText,v:[["Lernvideo","qo8YmW2pc-E"]],u:"https://learningapps.org/display?v=pu63qt0e218"},
+  {t:"Gleichsetzungsverfahren",g:genGleichsetzen,v:[["Lernvideo","WUc4xlqix40"]],f:FLIP+"8/lineare-gleichungssysteme/0-gleichsetzungsverfahren/",u:"https://learningapps.org/26547283"},
+  {t:"Einsetzungsverfahren",g:genEinsetzen,v:[["Lernvideo","FhoX-hLXhGQ"]],f:FLIP+"8/lineare-gleichungssysteme/1-einsetzungsverfahren/",u:"https://learningapps.org/15467347"},
+  {t:"Additionsverfahren",g:genAddieren,v:[["Lernvideo","bht5j_kttss"]],f:FLIP+"8/lineare-gleichungssysteme/2-additions-bzw-subtraktionsverfahren/",u:"https://learningapps.org/18953977"},
+  {t:"Gleichsetzungsverfahren (Prüfungsniveau)",g:genPruefGleich,v:[["Lernvideo","5LfgElfmdMU"]],f:FLIP+"8/lineare-gleichungssysteme/0-1-gleichsetzungsverfahren-pflichtbereich/"},
+  {t:"Einsetzungsverfahren (Prüfungsniveau)",g:genPruefEinsetz,v:[["Lernvideo","4cNOY8k3yG4"]],f:FLIP+"8/lineare-gleichungssysteme/1-1-einsetzungsverfahren-pflichtbereich/"},
+  {t:"Additionsverfahren (Prüfungsniveau)",g:genPruefAdd,v:[["Lernvideo","_KRdopgFuvM"]],f:FLIP+"8/lineare-gleichungssysteme/2-1-additionsverfahren-pflichtbereich/",u:"https://learningapps.org/6752701"},
+ ]},
+ {id:"fl",titel:"Umfang und Flächeninhalt von Drei- und Vierecken",items:[
+  {t:"Unterschied Umfang – Flächeninhalt",g:genUA,v:[["Lernvideo","UGlwrEfmFJY"]],f:FLIP+"8/dreiecke-und-vierecke/0-unterschied-u-und-a/",u:"https://learningapps.org/view1360415"},
+  {t:"Winkelsumme",g:genWinkel,v:[["Lernvideo","sGCAIponaVM"]],f:FLIP+"8/dreiecke-und-vierecke/1-winkelsumme/",u:"https://learningapps.org/view2277889"},
+  {t:"Quadrat",g:genQuadrat,v:[["Lernvideo","BB5gdLwqNOQ"]],f:FLIP+"8/dreiecke-und-vierecke/2-u-und-a-quadrat/",u:"https://learningapps.org/view2309682"},
+  {t:"Rechteck",g:genRechteck,v:[["Lernvideo","MhjBT13zydQ"]],f:FLIP+"8/dreiecke-und-vierecke/3-u-und-a-rechteck/",u:"https://learningapps.org/view7519584"},
+  {t:"Parallelogramm",g:genParallelogramm,v:[["Lernvideo","PXiqKPhvzfQ"]],f:FLIP+"8/dreiecke-und-vierecke/4-u-und-a-parallelogramm/",u:"https://learningapps.org/view7235675"},
+  {t:"Dreieck",g:genDreieck,v:[["Lernvideo","ft1aNp62lSw"]],f:FLIP+"8/dreiecke-und-vierecke/5-u-und-a-dreieck/",u:"https://www.learningsnacks.de/share/279601/"},
+  {t:"Trapez",g:genTrapez,v:[["Lernvideo","fPDF2taIF74"]],f:FLIP+"8/dreiecke-und-vierecke/6-u-und-a-trapez/",u:"https://learningapps.org/view6001447"},
+ ]},
+ {id:"pz",titel:"Prozent- und Zinsrechnung",items:[
+  {t:"Brüche und Prozente vergleichen",g:genOrdnen,v:[["Lernvideo","MeewL5ZASPU"]],u:"https://learningapps.org/display?v=p71kd6555"},
+  {t:"Prozentwert, Grundwert, Prozentsatz",g:genProzentsatz,v:[["Lernvideo","SBqXCXBzX5s"]],u:"https://learningapps.org/display?v=pnzjg4365"},
+  {t:"Vermehrter und verminderter Grundwert – Endwert",g:genEndwert,v:[["Lernvideo","tdxLUUZfsDU"]],u:"https://learningapps.org/display?v=p0ida9n4a18"},
+  {t:"Vermehrter und verminderter Grundwert – Anfangswert",g:genAnfangswert,v:[["Lernvideo","04AbpjTSeEc"]],u:"https://www.geogebra.org/m/brbhqfsg"},
+  {t:"Prozentuale Veränderung",g:genVeraenderung,v:[["Lernvideo","5iCVNk7xcVA"]],u:"https://www.geogebra.org/m/j7cGaxZD"},
+  {t:"Prozentsätze verknüpfen",g:genVerknuepfen,v:[["Lernvideo","N8wbwuJ9kIE"]],u:"https://www.geogebra.org/m/SG8BNpMa"},
+  {t:"Zinsrechnung",g:genZins,v:[["Lernvideo","cw0QvHcF0zQ"]],u:"https://learningapps.org/view3231161"},
+ ]},
+ {id:"db",titel:"Daten, Diagramme und Boxplot",items:[
+  {t:"Strichliste und Häufigkeitstabelle",g:genStrichliste,v:[["Lernvideo","KC6pVAWfpco"]],f:FLIP+"5/daten/0-strichliste-und-h%C3%A4ufigkeitstabelle/",u:"https://www.schlauerlernen.de/mathe/aufgaben/?lernen=strichliste"},
+  {t:"Diagramme",g:genDiagramm,v:[["Lernvideo","lirDyu-70Ts"]],u:"https://learningapps.org/view124964"},
+  {t:"Min, Max, Spannweite, Zentralwert",g:genMedian,v:[["Lernvideo","dx619xp3oJw"]],f:FLIP+"5/daten/2-kennwerte/",u:"https://learningapps.org/17092573"},
+  {t:"Kennwerte am Boxplot ablesen",g:genBoxKennwerte,v:[["Einführung","IFJKMF4uYcQ"],["Beispiele","otyYHCefjqI"]],f:FLIP+"10/daten-zufall/0-statistische-kennwerte-i/",u:"https://learningapps.org/17079793"},
+  {t:"Boxplot und Datenreihe",g:genBoxReihe,v:[["Lernvideo","IY_Q2vLYSis"]],f:FLIP+"10/daten-zufall/1-statistische-kennwerte-ii-boxplot/",u:"https://www.geogebra.org/m/CeXnhpa9"},
+ ]},
+];
+BEREICHE.forEach(b=>b.items.forEach((it,i)=>it.id=b.id+(i+1)));
+
+/* ============ Zustand (nur lokal im Browser) ============ */
+const KEY="mathefit8-v1";
+let ST={};
+try{ ST=JSON.parse(localStorage.getItem(KEY)||"{}")||{}; }catch(e){ ST={}; }
+const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(ST)); }catch(e){} };
+const stat=id=>ST[id]||null;
+const MARK={ok1:["✓","richtig"],ok2:["✓","richtig nach Video"],fail:["!","noch üben"]};
+const markHtml=s=>`<span class="mark ${s||""}" aria-label="${s?MARK[s][1]:"offen"}">${s?MARK[s][0]:""}</span>`;
+
+function makeTask(item,avoid){
+  for(let i=0;i<300;i++){
+    let t; try{ t=item.g(); }catch(e){ console.error(e); t=null; }
+    if(!t||t.options.length!==4) continue;
+    const keys=t.keys||t.options.map(o=>o.html);
+    if(new Set(keys).size!==4) continue;
+    if(avoid&&t.q===avoid) continue;
+    t.options=shuffle(t.options); return t;
+  }
+  throw new Error("Aufgabe konnte nicht erzeugt werden: "+item.t);
+}
+
+/* ============ Ansichten ============ */
+const app=document.getElementById("app");
+let cur=null; // {b, i, phase:'main'|'control'|'extra', task, sel, checked, videoSeen, revealed}
+
+function counts(b){ const s=b.items.map(it=>stat(it.id)); return {n:b.items.length,done:s.filter(Boolean).length,ok1:s.filter(x=>x==="ok1").length,ok2:s.filter(x=>x==="ok2").length,fail:s.filter(x=>x==="fail").length}; }
+const legend=`<div class="legend"><span>${markHtml("ok1")} gleich richtig</span><span>${markHtml("ok2")} richtig nach Video</span><span>${markHtml("fail")} noch üben</span><span>${markHtml(null)} offen</span></div>`;
+
+function home(){
+  cur=null; history.replaceState(null,"",location.pathname);
+  const all=BEREICHE.flatMap(b=>b.items), done=all.filter(it=>stat(it.id)).length, ok=all.filter(it=>/ok/.test(stat(it.id)||"")).length;
+  app.innerHTML=`
+  <h1>Mathe-Fit 8</h1>
+  <p class="muted">Grundlagen-Check: Wie fit bist du in den Themen aus den letzten Schuljahren?</p>
+  <div class="box auftrag"><b>So geht's</b>
+    <ol style="margin:.4em 0 0 1.1em;padding:0">
+      <li>Wähle einen Bereich.</li>
+      <li>Bearbeite jede Aufgabe <b>schriftlich in deinem Heft</b> – mit vollständigem Rechenweg. Erst danach siehst du die Antwortmöglichkeiten.</li>
+      <li>Wähle die Antwort, die zu deinem Ergebnis passt. Raten bringt nichts: Alle Antworten sehen sinnvoll aus.</li>
+      <li>Falsch? Dann schaust du ein Lernvideo und bekommst eine ähnliche Kontrollaufgabe.</li>
+    </ol></div>
+  <p class="small muted">Insgesamt bearbeitet: ${done} von ${all.length} · richtig: ${ok}</p>
+  <div class="grid">${BEREICHE.map(b=>{const c=counts(b);return `<button class="bereich" data-b="${b.id}"><b>${b.titel}</b>
+    <span class="small muted">${c.n} Teilgebiete · ${c.done} bearbeitet · ${c.ok1+c.ok2} richtig</span>
+    <div class="bar"><span class="g" style="width:${c.ok1/c.n*100}%"></span><span class="y" style="width:${c.ok2/c.n*100}%"></span><span class="r" style="width:${c.fail/c.n*100}%"></span></div>
+    <span class="row" style="gap:4px">${b.items.map(it=>markHtml(stat(it.id))).join("")}</span></button>`;}).join("")}</div>
+  ${legend}
+  <footer>
+    <p>Dein Fortschritt wird nur in diesem Browser auf diesem Gerät gespeichert. Es werden keine Daten an einen Server geschickt. <button class="linkbtn" id="reset">Fortschritt löschen</button></p>
+    <p>Die Lernvideos und Übungen sind Links zu anderen Webseiten (z.&nbsp;B. YouTube, LearningApps, GeoGebra). Sie öffnen sich in einem neuen Tab, dort gelten die Datenschutzbestimmungen der jeweiligen Anbieter.</p>
+    <p><button class="linkbtn" id="info">Quellen und Hinweise</button></p>
+  </footer>`;
+  app.querySelectorAll("[data-b]").forEach(el=>el.onclick=()=>openBereich(el.dataset.b));
+  document.getElementById("reset").onclick=()=>{ if(confirm("Willst du deinen gesamten Fortschritt auf diesem Gerät löschen?")){ ST={}; save(); home(); } };
+  document.getElementById("info").onclick=info;
+  window.scrollTo(0,0);
+}
+
+function info(){
+  app.innerHTML=`<div class="topbar"><button class="linkbtn" id="back">← Startseite</button></div>
+  <div class="card"><h2>Quellen und Hinweise</h2>
+  <p>Die Gliederung in Bereiche und Teilgebiete sowie die Auswahl der Lernvideos und Übungen orientieren sich an den Checklisten „Bin ich fit?!“ der Fachredaktion Mathematik des Landesbildungsservers Baden-Württemberg (Autor: Fabrice Takin).</p>
+  <p>Alle Aufgaben in dieser App wurden <b>neu formuliert</b> und werden bei jedem Aufruf mit neuen Zahlen erzeugt. Es werden keine Texte, Bilder oder Grafiken aus den Originalblättern verwendet; alle Abbildungen werden direkt im Browser gezeichnet.</p>
+  <p>Die Lernvideos stammen überwiegend von <a href="https://www.180grad-flip.de" target="_blank" rel="noopener">180grad-flip.de</a> (Sebastian Stoll) sowie von „Mathe by Daniel Jung“ und „Matheretter“. Sie werden nur verlinkt, nicht eingebettet oder kopiert. Die Übungen sind Links auf LearningApps.org, GeoGebra, ZUM, LearningSnacks und schlauerlernen.de. Für die Inhalte dieser Seiten sind die jeweiligen Anbieter verantwortlich.</p>
+  <p>Diese App ist ein kostenloses, nicht-kommerzielles Unterrichtsangebot. Sie verwendet keine Cookies, kein Tracking und lädt keine externen Schriften oder Skripte.</p>
+  </div>`;
+  document.getElementById("back").onclick=home; window.scrollTo(0,0);
+}
+
+function openBereich(bid,idx){
+  const b=BEREICHE.find(x=>x.id===bid); if(!b) return home();
+  if(idx==null){ idx=b.items.findIndex(it=>!stat(it.id)); if(idx<0) return summary(b); }
+  history.replaceState(null,"","#"+bid);
+  cur={b,i:idx,phase:"main",task:makeTask(b.items[idx]),sel:null,checked:false,revealed:false,videoSeen:false};
+  render();
+}
+function nextItem(){
+  const b=cur.b; const n=b.items.length;
+  for(let k=1;k<=n;k++){ const j=(cur.i+k)%n; if(!stat(b.items[j].id)) return openBereich(b.id,j); }
+  summary(b);
+}
+
+function header(){
+  const b=cur.b;
+  return `<div class="topbar"><button class="linkbtn" id="back">← Alle Bereiche</button><span class="small muted">${counts(b).done} von ${b.items.length} bearbeitet · ${counts(b).ok1+counts(b).ok2} richtig</span></div>
+  <h2 style="margin-top:6px">${b.titel}</h2>
+  <div class="chips">${b.items.map((it,i)=>`<button class="chip ${i===cur.i?"cur":""}" data-i="${i}" title="${it.t}">${markHtml(stat(it.id))}${i+1}</button>`).join("")}</div>${legend}`;
+}
+
+function render(){
+  const {b,i,task,phase}=cur, it=b.items[i];
+  const lbl=phase==="main"?"Aufgabe":"Kontrollaufgabe";
+  let h=header()+`<div class="card"><div class="label">Teilgebiet ${i+1} von ${b.items.length} · ${lbl}</div><h2>${it.t}</h2>`;
+  if(phase!=="main") h+=`<div class="box merk small">Das ist eine ähnliche Aufgabe mit anderen Zahlen. Zeig, dass du es jetzt kannst!</div>`;
+  h+=`<div class="q">${task.q}</div>`;
+  if(!cur.revealed){
+    h+=`<div class="box auftrag">✏️ <b>Bearbeite die Aufgabe zuerst schriftlich in deinem Heft</b> – mit Überschrift „${it.t}“ und vollständigem Rechenweg. Erst wenn du ein Ergebnis hast, lässt du dir die Antworten anzeigen.</div>
+      <button class="btn" id="reveal">Ich habe die Aufgabe im Heft gelöst – Antworten zeigen</button>`;
+  } else {
+    h+=`<p class="small muted" style="margin-bottom:0">Welche Antwort stimmt mit deinem Ergebnis im Heft überein?</p><div class="opts ${task.graphs?"graphs":""}">`+
+      task.options.map((o,k)=>{ let c="opt"; if(cur.sel===k) c+=" sel";
+        if(cur.checked){ if(o.ok&&(cur.sel===k||cur.showRight)) c+=" right"; else if(cur.sel===k) c+=" wrong"; }
+        return `<button class="${c}" data-o="${k}" ${cur.checked?"disabled":""}><span class="lt">${"ABCD"[k]}</span><span>${o.html}</span></button>`; }).join("")+`</div>`;
+    if(!cur.checked) h+=`<div class="row" style="margin-top:14px"><button class="btn" id="check" ${cur.sel==null?"disabled":""}>Antwort prüfen</button></div>`;
+    else h+=feedback(it);
+  }
+  h+=`</div>`;
+  app.innerHTML=h;
+  bind();
+}
+
+function videoBox(it,txt){
+  return `<div class="box hilfe"><b>${txt}</b><div class="videos">${it.v.map(([l,id])=>`<a href="${YT(id)}" target="_blank" rel="noopener" class="vlink">▶ ${l} (YouTube)</a>`).join("")}</div>
+  ${it.f?`<div class="small">Mehr zum Thema: <a href="${it.f}" target="_blank" rel="noopener" class="vlink">Themenseite auf 180grad-flip.de</a></div>`:""}
+  ${it.u?`<div class="small">Zum Üben: <a href="${it.u}" target="_blank" rel="noopener">interaktive Übung</a></div>`:""}</div>`;
+}
+
+function feedback(it){
+  const ok=cur.task.options[cur.sel].ok;
+  if(ok){
+    const after=cur.phase==="main"?"":" Das Video hat geholfen.";
+    return `<p class="feedback ok">✓ Richtig!${after}</p>${it.u?`<p class="small muted">Wenn du noch mehr üben willst: <a href="${it.u}" target="_blank" rel="noopener">interaktive Übung</a></p>`:""}
+      <div class="row"><button class="btn" id="next">Weiter zum nächsten Teilgebiet →</button></div>`;
+  }
+  if(cur.phase==="main"){
+    return `<p class="feedback bad">✗ Das stimmt leider noch nicht.</p>
+      <p>Vergleiche mit deinem Rechenweg im Heft. Schau dir jetzt das Lernvideo an und mach dir dabei Notizen. Danach bekommst du eine ähnliche Kontrollaufgabe.</p>
+      ${videoBox(it,"Lernvideo")}
+      <div class="row"><button class="btn" id="control" ${cur.videoSeen?"":"disabled"}>Video angeschaut – Kontrollaufgabe starten</button></div>
+      ${cur.videoSeen?"":`<p class="small muted">Der Knopf wird aktiv, sobald du das Video geöffnet hast.</p>`}`;
+  }
+  return `<p class="feedback bad">✗ Leider wieder nicht richtig.</p>
+    ${cur.showRight?`<p>Die richtige Antwort ist grün markiert. Vergleiche sie mit deiner Rechnung und suche deinen Fehler.</p>`:`<p><button class="linkbtn" id="showright">Richtige Antwort anzeigen</button></p>`}
+    <div class="box lehrer">Dieses Teilgebiet ist als <b>„noch üben“</b> markiert. Schau dir das Video noch einmal in Ruhe an, nutze die Übung oder frag deine Lehrkraft.</div>
+    ${videoBox(it,"Noch einmal ansehen")}
+    <div class="row"><button class="btn ghost" id="extra">Noch eine ähnliche Aufgabe</button><button class="btn" id="next">Weiter zum nächsten Teilgebiet →</button></div>`;
+}
+
+function bind(){
+  document.getElementById("back").onclick=home;
+  app.querySelectorAll("[data-i]").forEach(el=>el.onclick=()=>openBereich(cur.b.id,+el.dataset.i));
+  const $=id=>document.getElementById(id);
+  if($("reveal")) $("reveal").onclick=()=>{cur.revealed=true;render();};
+  app.querySelectorAll("[data-o]").forEach(el=>el.onclick=()=>{cur.sel=+el.dataset.o;render();});
+  if($("check")) $("check").onclick=check;
+  if($("next")) $("next").onclick=nextItem;
+  if($("showright")) $("showright").onclick=()=>{cur.showRight=true;render();};
+  app.querySelectorAll(".vlink").forEach(a=>a.addEventListener("click",()=>{ if(!cur.videoSeen){ cur.videoSeen=true; setTimeout(render,50);} }));
+  if($("control")) $("control").onclick=()=>newControl("control");
+  if($("extra")) $("extra").onclick=()=>newControl("extra");
+}
+function newControl(phase){
+  const it=cur.b.items[cur.i];
+  Object.assign(cur,{phase,task:makeTask(it,cur.task.q),sel:null,checked:false,revealed:false,showRight:false});
+  render(); window.scrollTo(0,0);
+}
+function check(){
+  if(cur.sel==null) return;
+  cur.checked=true;
+  const id=cur.b.items[cur.i].id, ok=cur.task.options[cur.sel].ok;
+  if(cur.phase==="main") ST[id]=ok?"ok1":null;
+  else ST[id]=ok?(ST[id]==="ok1"?"ok1":"ok2"):"fail";
+  if(!ST[id]) delete ST[id];
+  if(cur.phase==="main"&&!ok){ /* Status bleibt offen, bis die Kontrollaufgabe bearbeitet ist */ }
+  save(); render();
+}
+
+function summary(b){
+  history.replaceState(null,"","#"+b.id);
+  const c=counts(b);
+  app.innerHTML=`<div class="topbar"><button class="linkbtn" id="back">← Alle Bereiche</button></div>
+  <div class="card"><h2>${b.titel} – deine Übersicht</h2>
+  <p>${c.done} von ${c.n} Teilgebieten bearbeitet: <b>${c.ok1}</b> gleich richtig, <b>${c.ok2}</b> richtig nach dem Video, <b>${c.fail}</b> noch üben.</p>
+  <table class="sum">${b.items.map((it,i)=>{const s=stat(it.id);return `<tr><td>${markHtml(s)}</td><td><b>${it.t}</b><br><span class="small muted">${s?MARK[s][1]:"noch offen"}</span>
+    ${s==="fail"?`<div class="small"><a href="${YT(it.v[0][1])}" target="_blank" rel="noopener">Video</a>${it.u?` · <a href="${it.u}" target="_blank" rel="noopener">Übung</a>`:""}</div>`:""}</td>
+    <td style="text-align:right"><button class="btn ghost small" data-i="${i}">${s?"Nochmal":"Starten"}</button></td></tr>`;}).join("")}</table>
+  <div class="box lehrer small">Zeige diese Übersicht deiner Lehrkraft. Teilgebiete mit <b>!</b> solltest du noch einmal üben.</div></div>`;
+  document.getElementById("back").onclick=home;
+  app.querySelectorAll("[data-i]").forEach(el=>el.onclick=()=>openBereich(b.id,+el.dataset.i));
+  window.scrollTo(0,0);
+}
+
+const h0=location.hash.slice(1); if(BEREICHE.some(b=>b.id===h0)) openBereich(h0); else home();
+</script>
+</body>
+</html>
